@@ -1,9 +1,10 @@
 package com.zipdoridle.zachwitip.config;
 
 import com.zipdoridle.zachwitip.auth.handler.OAuthLoginSuccessfulHandler;
-import com.zipdoridle.zachwitip.auth.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -17,7 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/login","/swagger-ui/**", "/images/**").permitAll()
+                .antMatchers("/login", "/images/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()
@@ -35,6 +36,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.exceptionHandling()
                 .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/login"))
                 .accessDeniedHandler((request, response, accessDeniedException) -> response.sendRedirect("/"));
+
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .mvcMatchers(HttpMethod.GET, "/**/api-docs/**")
+                .mvcMatchers(HttpMethod.GET, "/swagger-resources/**")
+                .mvcMatchers(HttpMethod.GET, "/swagger-ui/**")
+                .mvcMatchers(HttpMethod.GET,"/webjars/**")
+                .mvcMatchers(HttpMethod.GET, "/swagger/**");
 
     }
 }
