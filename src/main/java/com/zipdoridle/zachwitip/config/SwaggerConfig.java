@@ -17,7 +17,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30)
                 .groupName("zipdoridle")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.zipdoridle.zachwitip.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.zipdoridle.zachwitip"))
                 .paths(PathSelectors.ant("/**"))
                 .build();
     }
